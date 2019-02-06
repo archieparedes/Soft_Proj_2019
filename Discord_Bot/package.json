@@ -1,0 +1,17 @@
+{
+  "name": "data_science_bot",
+  "version": "1.0.0",
+  "description": "Discord bot for Data Science professionals, managers, and hiring managers",
+  "main": "DsB.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Archie Paredes",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/core": "^5.2.3",
+    "discord.js": "^11.4.2",
+    "python-shell": "^1.0.7",
+    "rxjs": "^5.5.0"
+  }
+}
