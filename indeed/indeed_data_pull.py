@@ -42,11 +42,11 @@ techFound = {"python":False, "r":False, "jasper":False, "sql":False, "tableau":F
         "ai":False, "numpy":False, "linux":False, "pig":False, "mongodb":False, "keras":False, "docker":False,
         "d3":False, "caffe":False, "github":False, "ssh":False, "kafka":False, "mllib":False, "pandas":False, "scipy":False}
 
-p = 0
+linkCount = 0
 url = "https://www.indeed.com/jobs?q=data+scientist&start="
 
 for i in range (0,50): 
-    url += "{}0".format(i)
+    url += "{}0".format(i) # reinitialize url with page number
     res = requests.get(url)
     soup = bs(res.content, "lxml")
     for link in soup.select('[data-tn-element="jobTitle"]'):
@@ -54,7 +54,7 @@ for i in range (0,50):
         uClient = ur(absolute_link) #opens site, and gets page
         pageText = uClient.read() # html
         uClient.close() #closes sites
-        p += 1
+        linkCount += 1
         pageSoup = bs(pageText, "html.parser") #html parser
 
         intro = pageSoup.findAll("p") # job description
@@ -86,7 +86,7 @@ for i in range (0,50):
         techFound = {x: False for x in techFound}                
     url = "https://www.indeed.com/jobs?q=data+scientist&l="
 
-print("Amount of links: ", p)
+print("Amount of links: ", linkCount)
 print("Writing to CSV")
 torch = 0
 aws = 0
