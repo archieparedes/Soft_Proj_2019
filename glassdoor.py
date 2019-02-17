@@ -9,6 +9,16 @@ import json
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+#These are the google credentials and links for connecting to the sheets API
+scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
+client = gspread.authorize(creds)
+
+# #name of sheet in my google sheets
+sheet = client.open('glassdoor Jobs')
 
 
 
@@ -76,6 +86,11 @@ print(theBiggestList)
 keyword = 'test'
 place = 'test2'
 with open('test-job-results.csv', 'wb') as myfile:
-    writer = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+    fieldnames = ['Name', 'Company', 'Salary', 'Location']
+    writer = csv.DictWriter(myfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
+    writer.writeheader()
     for data in theBiggestList:
-        writer.writerow(data.items())
+        writer.writerow(data)
+csv = open('testJobResults.csv', 'r')
+finalcsv = csv.read().encode(encoding = 'UTF-8', errors='strict')
+client.import_csv(sheet.id, finalcsv)
