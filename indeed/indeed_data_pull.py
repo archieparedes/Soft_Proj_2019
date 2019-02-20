@@ -95,11 +95,12 @@ aws = 0
 with open('techData.csv', 'w', newline = '') as csv_file:
     writer = csv.writer(csv_file)
     for key, value in tech.items():
-       writer.writerow([key, value])
-       if(key == "aws" or key == "amazon web"):
-           aws+=1
-       elif(key == "torch" or key == "pytorch"):
-           torch+=1
+        if(key == "aws" or key == "amazon web"):
+            aws+=1
+        elif(key == "torch" or key == "pytorch"):
+            torch+=1
+        else:
+            writer.writerow([key, value])
     writer.writerow(["amazon web service", aws])
     writer.writerow(["pyTorch", torch])
     
