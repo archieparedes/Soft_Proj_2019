@@ -34,10 +34,9 @@ print(r.status_code)
 XPATH_NAME = './/a/text()'
 XPATH_COMPANY = './/div[@class="flexbox empLoc"]/div/text()'
 XPATH_LOC = './/span[@class="subtle loc"]/text()'
-XPATH_SALARY = './/span[@class="green small"]/text()'
+XPATH_SALARY = '//*[@id="Details"]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[2]/div/text()'
 XPATH_EVERYTHING = '//li[@class="jl"]'
-XPATH_CITYSTATE = '/html/body/div[3]/div/div/div/div[1]/div/div[2]/section/div/div/article/div/div[1]/div[3]/div[3]/span[2]'
-XPATH_RATING = './/div[@class="ratingNum margRtSm"]/div/text()'
+XPATH_RATING = '//a[contains(@class,"avg")]/text()'
 
 
 
@@ -46,8 +45,11 @@ try:
 		theBiggestList = []
 		response = sessions.get(url)
 		print(response)
-		parser = html.fromstring(response.text)
-		
+		parser = html.fromstring(response.content)
+
+		absolute_url = "https://www.glassdoor.com"
+		parser.make_links_absolute(absolute_url)
+
 		bar = parser.xpath(XPATH_EVERYTHING)
 		for foo in bar:
 			foo_name = foo.xpath(XPATH_NAME)
@@ -68,25 +70,27 @@ try:
 			foo_company_cleaned = ''.join(foo_company).replace('-','')
 			foo_money_cleaned = ''.join(foo_money).strip()
 			foo_citystate_cleaned = ''.join(foo_citystate).strip('-')
+			foo_rating_cleaned = ''.join(foo_rating).strip()
 
 			myDict = {
 				"Name" : foo_name_cleaned,
 				"Company" : foo_company_cleaned,
 				"Salary" : foo_money_cleaned,
-				"Location" : foo_citystate_cleaned
+				"Location" : foo_citystate_cleaned,
+				"Rating" : foo_rating_cleaned
 			}
 			theBiggestList.append(myDict)
 		print("works??")
 except:
 	print("Something went wrong")
-	
+	  
 print(theBiggestList)
 
 
 keyword = 'test'
 place = 'test2'
-with open('test-job-results.csv', 'wb') as myfile:
-    fieldnames = ['Name', 'Company', 'Salary', 'Location']
+with open('testJobResults.csv', 'wb') as myfile:
+    fieldnames = ['Name', 'Company', 'Salary', 'Location', 'Rating']
     writer = csv.DictWriter(myfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
     writer.writeheader()
     for data in theBiggestList:
