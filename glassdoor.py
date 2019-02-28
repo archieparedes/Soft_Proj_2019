@@ -96,6 +96,7 @@ try:
 			#Clean up the dirt
 			foo_name_cleaned = ''.join(foo_name).strip('-') if foo_name else None
 			foo_company_cleaned = ''.join(foo_company).replace('-','')
+			
 			foo_money_cleaned = ''.join(foo_money).strip()
 			foo_citystate_cleaned = ''.join(foo_citystate).strip('-')
 			foo_rating_cleaned = ''.join(foo_rating).strip()
