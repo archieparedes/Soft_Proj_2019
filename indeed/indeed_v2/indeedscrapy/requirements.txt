@@ -1,0 +1,2 @@
+Scrapy : pip install Scrapy
+pypiwin32 : pip install pypiwin32
