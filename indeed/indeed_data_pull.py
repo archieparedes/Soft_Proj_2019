@@ -107,7 +107,3 @@ with open('techData.csv', 'w', newline = '') as csv_file:
 print("Done writing to CSV")
 end = time.time()
 print("Execution time: ",end - start)
-
-
-     
-

@@ -15,3 +15,17 @@ class IndeedscrapyItem(scrapy.Item):
     location = scrapy.Field()
     link = scrapy.Field()
     
+def pages():
+    jobList = list()
+    job = input("Enter job title:")
+    jobSplit = job.split(" ")
+
+    if(len(jobSplit) == 2):
+        baseLink = "https://www.indeed.com/jobs?q={}+{}&sort=date&start=".format(jobSplit[0], jobSplit[1])
+    elif(len(jobSplit) == 3):
+        baseLink = "https://www.indeed.com/jobs?q={}+{}+{}&sort=date&start=".format(jobSplit[0], jobSplit[1], jobSplit[2])
+
+    for i in range(0, 2):
+        jobList.append(baseLink+"{}0".format(i))
+
+    return jobList

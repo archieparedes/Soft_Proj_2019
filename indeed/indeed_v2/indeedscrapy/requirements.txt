@@ -1,2 +1,9 @@
-Scrapy : pip install Scrapy
-pypiwin32 : pip install pypiwin32
+Requirements:
+    Scrapy - pip install Scrapy
+    pypiwin32 - pip install pypiwin32
+
+This program pulls link, location, and job title using scrapy.
+
+how to run:
+    1.) navigate to indeedscrapy folder or use git bash to navigate instantly.
+    2.) run this command >> scrapy crawl indeedLinks -o <desired filename>.csv -t csv

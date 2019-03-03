@@ -1,55 +1,51 @@
-python,13
-r,12
+python,152
+r,134
 jasper,0
-sql,6
-tableau,2
-spotfire,0
-oracle,0
-sas,2
-machine learning,16
-spss,0
-power bi,3
+sql,74
+tableau,34
+spotfire,1
+oracle,17
+sas,33
+machine learning,235
+spss,13
+power bi,4
 rdms,0
-javascript,0
-java,2
-tensorflow,2
-torch,1
-pytorch,0
-cloud,2
-big data,4
-c,2
-matlab,1
-api,0
-azure,0
-jupyter,0
-hadoop,2
-data mining,2
-excel,3
-spark,0
+javascript,14
+java,77
+tensorflow,29
+cloud,42
+big data,61
+c,40
+matlab,23
+api,4
+azure,8
+jupyter,1
+hadoop,28
+data mining,57
+excel,40
+spark,24
 theano,0
-scikit,0
-rest,0
-deep learning,3
-aws,0
-amazon web,1
-nosql,0
-hive,1
+scikit,11
+rest,5
+deep learning,79
+nosql,14
+hive,13
 ruby,0
 pearl,0
-ai,2
-numpy,0
-linux,1
-pig,0
-mongodb,0
-keras,0
-docker,0
-d3,0
-caffe,1
-github,0
+ai,18
+numpy,6
+linux,8
+pig,7
+mongodb,2
+keras,12
+docker,4
+d3,7
+caffe,21
+github,4
 ssh,0
-kafka,0
-mllib,0
-pandas,0
-scipy,0
+kafka,5
+mllib,1
+pandas,4
+scipy,3
 amazon web service,2
 pyTorch,2

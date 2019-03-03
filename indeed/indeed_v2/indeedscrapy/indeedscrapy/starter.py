@@ -10,7 +10,8 @@ jobtitle = input("Enter a job: ")
 jobtitle = jobtitle.replace(" ", "_")
 
 
-shell_command1 = "python indeed_linkLocTitl2.py".format(jobtitle)
+shell_command1 = "scrapy crawl indeedLinks -a job={} -a domain=system -o t1.csv -t csv".format(jobtitle)
+
 
 os.system(shell_command1)
 
