@@ -54,6 +54,7 @@ titles = list()
 companies = list()
 with open('ds.csv', 'w+', newline = '') as csv_file:
     writer = csv.writer(csv_file)
+    writer.writerow(["Title", "Company", "Location", "Tech"])
     for i in range (0,16): 
         url += "{}0".format(i) # reinitialize url with page number
         print("page: ", url)
@@ -70,7 +71,8 @@ with open('ds.csv', 'w+', newline = '') as csv_file:
             title = link.get("title")
             location = loc.text
             if(company in companies and title in titles):
-                pass
+                print("dupe found")
+                continue
             titles.append(title)
             companies.append(company)
             links.append(absolute_link)
