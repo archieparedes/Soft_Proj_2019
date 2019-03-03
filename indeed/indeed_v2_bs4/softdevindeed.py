@@ -51,7 +51,9 @@ titles = list()
 companies = list()
 with open('se.csv', 'w+', newline = '') as csv_file:
     writer = csv.writer(csv_file)
+    writer.writerow(["Title", "Company", "Location", "Tech"])
     writer.writerow(["title", "company", "location", "techs"])
+
     for i in range (0,16): 
         url += "{}0".format(i) # reinitialize url with page number
         print("page: ", url)
@@ -67,7 +69,9 @@ with open('se.csv', 'w+', newline = '') as csv_file:
             title = link.get("title")
             location = loc.text
             if(company in companies and title in titles): # get rids of duplicate/spam job posting
-                pass
+                print("dupe found")
+                continue
+
             titles.append(title)
             companies.append(company)
             links.append(absolute_link)
@@ -106,7 +110,6 @@ with open('se.csv', 'w+', newline = '') as csv_file:
                             except:
                                 pass
 
-           
             writer = csv.writer(csv_file)
             writer.writerow([title, company, location, techs])
             techs = "" #reset                
