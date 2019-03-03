@@ -51,6 +51,7 @@ titles = list()
 companies = list()
 with open('se.csv', 'w+', newline = '') as csv_file:
     writer = csv.writer(csv_file)
+    writer.writerow(["title", "company", "location", "techs"])
     for i in range (0,16): 
         url += "{}0".format(i) # reinitialize url with page number
         print("page: ", url)
