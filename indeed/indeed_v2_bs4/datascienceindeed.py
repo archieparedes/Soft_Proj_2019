@@ -8,12 +8,20 @@ Indeed API - URL puller - Data Science
 import csv
 import re
 import requests
-from requests_html import HTMLSession
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen as ur
 from urllib.parse import urljoin
-import time
+import time, signal
 from itertools import tee, islice, chain
+
+class TimeoutError (RuntimeError):
+    pass
+
+def handler (signum, frame):
+    raise TimeoutError()
+
+signal.signal (signal.SIGALRM, handler)
+
 
 def now_next(some_iterable): # helps with getting previous and next
     items, nexts = tee(some_iterable, 2)
@@ -55,7 +63,7 @@ companies = list()
 with open('ds.csv', 'w+', newline = '') as csv_file:
     writer = csv.writer(csv_file)
     writer.writerow(["Title", "Company", "Location", "Tech"])
-    for i in range (0,16): 
+    for i in range (0,100):
         url += "{}0".format(i) # reinitialize url with page number
         print("page: ", url)
         res = requests.get(url)
@@ -66,60 +74,75 @@ with open('ds.csv', 'w+', newline = '') as csv_file:
         #t4 = soup.findAll("h2", {"class": "jobtitle"})
         
         for link, loc, comp in zip(t1,t2,t3):
-            absolute_link = urljoin(url,link.get("href"))
+            absolute_link = urljoin(url, link.get("href"))
             company = comp.text.strip()
             title = link.get("title")
             location = loc.text
-            if(company in companies and title in titles):
+            if (company in companies and title in titles):
                 print("dupe found")
                 continue
+
             titles.append(title)
             companies.append(company)
             links.append(absolute_link)
-            uClient = ur(absolute_link) #opens site, and gets page
-            pageText = uClient.read() # html
-            uClient.close() #closes sites
-            linkCount += 1
-            pageSoup = bs(pageText, "html.parser") #html parser
-            print(linkCount)
-            intro = pageSoup.findAll("p") # job description
-            middle = pageSoup.findAll("li") # tech
-            for i in middle:
-                if(str(i)[3] == ' '):
-                    pass
-                else:
-                    line = (str(i)[4:-5]).lower()
+            signal.alarm(5)
+            try:
+                uClient = ur(absolute_link)  # opens site, and gets page
+                pageText = uClient.read()  # html
+                uClient.close()  # closes sites
 
-                    # deletes any special chars. Helps with data collection
-                    for k in line.split("\n"):
-                        line = re.sub(r"[^a-zA-Z0-9]+", ' ', k) # replace special characters with space
+                linkCount += 1
+                pageSoup = bs(pageText, "html.parser")  # html parser
+                print(linkCount)
+                intro = pageSoup.findAll("p")  # job description
+                middle = pageSoup.findAll("li")  # tech
+                cont = True
+                for i in middle:
+                    if (str(i)[3] == ' '):
+                        pass
+                    else:
+                        line = (str(i)[4:-5]).lower()
 
-                    # adds 1 to tech if found
-                    for t1,t2 in now_next(line.split()):
-                        if(t1 in tech and techFound[t1] == False): 
-                            #tech[t1] = tech[t1] + 1 # adds a tally
-                            if(t1 == "torch" or t1 == "pytorch"):
-                                techs += "pytorch" + " "
-                                pass
-                            techs += t1 + " "
-                            techFound[t1] = True # prevents duplicates
-                        else:
-                            try:
-                                twoString = t1+" "+t2 # finds two string
-                                if(twoString in tech):
-                                    twoString = twoString.replace(" ", "_")
-                                    tech += twoString + " "
-                                    #tech[twoString] = tech[twoString] + 1 
-                                    techFound[twoString] = True # prevents duplicates
-                            except:
-                                pass
+                        # deletes any special chars. Helps with data collection
+                        for k in line.split("\n"):
+                            line = re.sub(r"[^a-zA-Z0-9]+", ' ', k)  # replace special characters with space
 
-           
-            writer = csv.writer(csv_file)
+                        # adds 1 to tech if found
+                        for t1, t2 in now_next(line.split()):
+                            if (t1 in tech and techFound[t1] == False):
+                                # tech[t1] = tech[t1] + 1 # adds a tally
+                                if (t1 == "torch" or t1 == "pytorch"):
+                                    techs += "pytorch" + " "
+                                    pass
+                                techs += t1 + " "
+                                techFound[t1] = True  # prevents duplicates
+                                cont = False
+                                break
+                            else:
+                                try:
+                                    twoString = t1 + " " + t2  # finds two string
+                                    if (twoString in tech):
+                                        twoString = twoString.replace(" ", "_")
+                                        tech += twoString + " "
+                                        # tech[twoString] = tech[twoString] + 1
+                                        techFound[twoString] = True  # prevents duplicates\
+                                        cont = False
+                                        break
+                                except:
+                                    pass
+                        if (cont == False):
+                            break
+            except:
+                print("oof")
+                continue
+                writer = csv.writer(csv_file)
+            if (techs == "c "):
+                techs = "c/c++"
             writer.writerow([title, company, location, techs])
-            techs = "" #reset                
-            techFound = {x: False for x in techFound}#reset               
+            techs = ""  # reset
+            techFound = {x: False for x in techFound}  # reset
         url = "https://www.indeed.com/jobs?q=data+scientist&start="
+
 
 print("Amount of links: ", linkCount)
 end = time.time()
