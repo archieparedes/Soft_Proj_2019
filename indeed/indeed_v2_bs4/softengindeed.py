@@ -47,8 +47,7 @@ techFound = {"java":False,"r":False,"python":False, "c#":False,"ruby":False,"alg
 	"sqlite":False,"microsoft office":False,"unix":False,"bi":False,"api":False}
 
 linkCount = 0
-url = "https://www.indeed.com/jobs?q=software+developer&start="
-#url = "https://www.indeed.com/jobs?q=software+engineer&start="
+url = "https://www.indeed.com/jobs?q=software+engineer&start="
 techs = ""
 title = ""
 location = ""
@@ -59,7 +58,7 @@ titles = list()
 companies = list()
 oof = 0
 
-with open('sd.csv', 'w', newline='') as csv_file:
+with open('se.csv', 'w+', newline='') as csv_file:
     writer = csv.writer(csv_file)
     writer.writerow(["Title", "Company", "Location", "Tech"])
     for i in range(0, 100):
@@ -148,8 +147,7 @@ with open('sd.csv', 'w', newline='') as csv_file:
             techs = "" #reset
             techFound = {x: False for x in techFound} #reset
 
-        url = "https://www.indeed.com/jobs?q=software+developer&start="
-        #url = "https://www.indeed.com/jobs?q=software+engineer&start="
+        url = "https://www.indeed.com/jobs?q=software+engineer&start="
 
 print("Amount of links: ", linkCount)
 print("Links that failed {}".format(oof))

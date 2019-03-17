@@ -39,7 +39,7 @@ tech = {"python":0, "r":0, "jasper":0, "sql":0, "tableau":0, "spotfire":0, "orac
         "aws":0, "amazon web":0, "nosql":0, "hive":0, "ruby":0, "pearl":0,
         "ai":0,"numpy":0, "linux":0, "pig":0, "mongodb":0, "keras":0, "docker":0,
         "d3":0, "caffe":0, "github":0, "ssh":0, "kafka":0, "mllib":0, "pandas":0,
-        "scipy":0}
+        "scipy":0, "c#":0}
 
 techFound = {"python":False, "r":False, "jasper":False, "sql":False, "tableau":False, "spotfire":False, "oracle":False,
         "sas":False, "machine learning":False, "spss":False, "power bi":False, "rdms":False, "javascript":False,
@@ -48,10 +48,12 @@ techFound = {"python":False, "r":False, "jasper":False, "sql":False, "tableau":F
         "excel":False, "spark":False, "theano":False, "scikit":False, "rest":False, "deep learning":False,
         "aws":False, "amazon web":False, "nosql":False, "hive":False, "ruby":False, "pearl":False,
         "ai":False, "numpy":False, "linux":False, "pig":False, "mongodb":False, "keras":False, "docker":False,
-        "d3":False, "caffe":False, "github":False, "ssh":False, "kafka":False, "mllib":False, "pandas":False, "scipy":False}
+        "d3":False, "caffe":False, "github":False, "ssh":False, "kafka":False, "mllib":False, "pandas":False, "scipy":False,
+        "c#":False}
 
 linkCount = 0
 url = "https://www.indeed.com/jobs?q=data+scientist&start="
+#url = "https://www.indeed.com/jobs?q=data+engineer&start="
 techs = ""
 title = ""
 location = ""
@@ -60,13 +62,19 @@ link = ""
 links = list()
 titles = list()
 companies = list()
+oof = 0
 with open('ds.csv', 'w+', newline = '') as csv_file:
     writer = csv.writer(csv_file)
     writer.writerow(["Title", "Company", "Location", "Tech"])
-    for i in range (0,100):
+    for i in range(0, 100):
         url += "{}0".format(i) # reinitialize url with page number
         print("page: ", url)
-        res = requests.get(url)
+        try:
+            res = requests.get(url)
+        except:
+            oof+=1
+            continue
+
         soup = bs(res.content, "lxml")
         t1 = soup.select('[data-tn-element="jobTitle"]')
         t2 = soup.findAll("div", {"class": "location"})
@@ -94,19 +102,18 @@ with open('ds.csv', 'w+', newline = '') as csv_file:
                 linkCount += 1
                 pageSoup = bs(pageText, "html.parser")  # html parser
                 print(linkCount)
-                intro = pageSoup.findAll("p")  # job description
+                #intro = pageSoup.findAll("p")  # job description
                 middle = pageSoup.findAll("li")  # tech
                 cont = True
                 for i in middle:
                     if (str(i)[3] == ' '):
-                        pass
+                        continue
                     else:
-                        line = (str(i)[4:-5]).lower()
-
+                        line = (str(i)[4:-5]).lower() # lowercase all for easy finding
+                        line = re.sub(r"[^a-zA-Z0-9#]+", ' ', line)
                         # deletes any special chars. Helps with data collection
-                        for k in line.split("\n"):
-                            line = re.sub(r"[^a-zA-Z0-9]+", ' ', k)  # replace special characters with space
-
+                        # for k in line.split("\n"):
+                        #     line = re.sub(r"[^a-zA-Z0-9]+", ' ', k)  # replace special characters with space
                         # adds 1 to tech if found
                         for t1, t2 in now_next(line.split()):
                             if (t1 in tech and techFound[t1] == False):
@@ -134,6 +141,7 @@ with open('ds.csv', 'w+', newline = '') as csv_file:
                             break
             except:
                 print("oof")
+                oof+=1
                 continue
                 writer = csv.writer(csv_file)
             if (techs == "c "):
@@ -142,8 +150,10 @@ with open('ds.csv', 'w+', newline = '') as csv_file:
             techs = ""  # reset
             techFound = {x: False for x in techFound}  # reset
         url = "https://www.indeed.com/jobs?q=data+scientist&start="
+        #url = "https://www.indeed.com/jobs?q=data+engineer&start="
 
 
 print("Amount of links: ", linkCount)
+print("Links that failed {}".format(oof))
 end = time.time()
 print("Execution time: ",end - start)
